@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>xcomm-pro | Animal Sound Translator</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <h1>xcomm-pro</h1>
+      <p>Translate animal sounds into human-friendly speech</p>
+    </header>
+
+    <main>
+      <section class="home" id="home">
+        <div class="section-head">
+          <h2>Home</h2>
+          <p>Tap an animal to see what its sounds might mean.</p>
+        </div>
+
+        <div class="habitat-scene" aria-label="Savanna and ocean habitat scene">
+          <div class="animal lion" data-animal="lion">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/7/73/Lion_waiting_in_Namibia.jpg"
+              alt="Lion in the savanna"
+            />
+            <span>Lion</span>
+          </div>
+
+          <div class="animal falcon" data-animal="falcon">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/1/16/Falco_peregrinus_good_-_Christopher_Watson.jpg"
+              alt="Falcon in the sky"
+            />
+            <span>Falcon</span>
+          </div>
+
+          <div class="animal wolf" data-animal="wolf">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/1/15/2010-kabini-grey-wolf.jpg"
+              alt="Wolf in grassland"
+            />
+            <span>Wolf</span>
+          </div>
+
+          <div class="animal bear" data-animal="bear">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/7/71/2010-brown-bear.jpg"
+              alt="Bear near dry brush"
+            />
+            <span>Bear</span>
+          </div>
+
+          <div class="animal shark" data-animal="shark">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/5/56/White_shark.jpg"
+              alt="Shark in ocean water"
+            />
+            <span>Shark</span>
+          </div>
+        </div>
+
+        <div class="controls">
+          <button id="animalPickerBtn" class="primary-btn" type="button">
+            Choose an animal to listen to
+          </button>
+        </div>
+
+        <div class="translator-card" id="translationOutput" aria-live="polite">
+          <h3>Translation Output</h3>
+          <p class="label">Animal sound pattern</p>
+          <p id="soundPattern">—</p>
+          <p class="label">Human interpretation</p>
+          <p id="humanMeaning">Choose an animal to generate a translation.</p>
+        </div>
+      </section>
+
+      <section class="dashboard" id="dashboard">
+        <div class="section-head">
+          <h2>Dashboard</h2>
+          <p>Profile/account and sign-in details</p>
+        </div>
+
+        <div class="dashboard-grid">
+          <article class="card profile-card">
+            <h3>Individual Profile</h3>
+            <img
+              class="avatar"
+              src="https://api.dicebear.com/8.x/personas/svg?seed=XcommUser"
+              alt="User profile avatar"
+            />
+            <p><strong>Name:</strong> Wildlife Listener</p>
+            <p><strong>Plan:</strong> Explorer (Prototype)</p>
+            <p><strong>Last translation:</strong> <span id="lastTranslation">None yet</span></p>
+          </article>
+
+          <article class="card signin-card">
+            <h3>Sign In Details</h3>
+            <form id="signinForm">
+              <label>
+                Email
+                <input type="email" id="email" placeholder="you@example.com" required />
+              </label>
+              <label>
+                Password
+                <input type="password" id="password" placeholder="••••••••" required />
+              </label>
+              <label>
+                Remember me
+                <select id="remember">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </label>
+              <button type="submit" class="primary-btn">Save sign in details</button>
+              <p id="signinStatus" class="status"></p>
+            </form>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="animalDialog">
+      <div class="dialog-header">
+        <h3>Select an Animal</h3>
+        <button id="closeDialog" type="button" aria-label="Close animal selection">✕</button>
+      </div>
+      <div class="animal-list" id="animalList"></div>
+    </dialog>
+
+    <script src="app.js"></script>
+  </body>
+</html>
