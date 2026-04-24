@@ -1,0 +1,79 @@
+diff --git a/Styles.css b/Styles.css
+index 8f92464eab14222cee36bd18cc2ad72f622e042c..2abde525c4055a0dbc23ce0f8487f9939b976d52 100644
+--- a/Styles.css
++++ b/Styles.css
+@@ -102,50 +102,74 @@ main {
+   display: block;
+   text-align: center;
+   margin-top: 0.35rem;
+ }
+ 
+ .lion { left: 4%; bottom: 10%; }
+ .falcon { left: 26%; top: 18%; }
+ .wolf { left: 38%; bottom: 14%; }
+ .bear { left: 18%; bottom: 38%; }
+ .shark { right: 6%; bottom: 14%; }
+ 
+ .controls {
+   margin: 1rem 0;
+ }
+ 
+ .primary-btn {
+   background: linear-gradient(120deg, #0ea5e9, #14b8a6);
+   border: none;
+   color: white;
+   font-weight: 600;
+   border-radius: 10px;
+   padding: 0.7rem 1rem;
+   cursor: pointer;
+ }
+ 
++
++.secondary-btn {
++  background: #15334a;
++  border: 1px solid #3f6d8d;
++  color: white;
++  font-weight: 600;
++  border-radius: 10px;
++  padding: 0.6rem 0.9rem;
++  cursor: pointer;
++}
++
++.secondary-btn:disabled {
++  opacity: 0.55;
++  cursor: not-allowed;
++}
++
++.listen-row {
++  display: flex;
++  flex-wrap: wrap;
++  align-items: center;
++  gap: 0.75rem;
++  margin-top: 0.75rem;
++}
++
+ .translator-card,
+ .card {
+   border: 1px solid #44607a;
+   background: var(--card);
+   border-radius: 14px;
+   padding: 1rem;
+ }
+ 
+ .label {
+   opacity: 0.8;
+   margin-bottom: 0.2rem;
+ }
+ 
+ .dashboard {
+   margin-top: 2rem;
+ }
+ 
+ .dashboard-grid {
+   display: grid;
+   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+   gap: 1rem;
+ }
+ 
+ .avatar {
+   width: 84px;
