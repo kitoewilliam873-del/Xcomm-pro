@@ -1,0 +1,207 @@
+diff --git a/Index.html b/Index.html
+index fba36285cb92ef45b84618f61b17460c496ed3a6..9a4b7935a0f55ee36638c93fa2dbbe2c355f7a38 100644
+--- a/Index.html
++++ b/Index.html
+@@ -1,87 +1,115 @@
+-diff --git a/Index.html b/Index.html
+-index 1491d429b40907445d56b64abb860e26c74164dd..80104d3dc8949063b8f8fab33f6887cfdb4da933 100644
+---- a/Index.html
+-+++ b/Index.html
+-@@ -37,50 +37,82 @@
+-           </div>
+- 
+-           <div class="animal wolf" data-animal="wolf">
+-             <img
+-               src="https://upload.wikimedia.org/wikipedia/commons/1/15/2010-kabini-grey-wolf.jpg"
+-               alt="Wolf in grassland"
+-             />
+-             <span>Wolf</span>
+-           </div>
+- 
+-           <div class="animal bear" data-animal="bear">
+-             <img
+-               src="https://upload.wikimedia.org/wikipedia/commons/7/71/2010-brown-bear.jpg"
+-               alt="Bear near dry brush"
+-             />
+-             <span>Bear</span>
+-           </div>
+- 
+-           <div class="animal shark" data-animal="shark">
+-             <img
+-               src="https://upload.wikimedia.org/wikipedia/commons/5/56/White_shark.jpg"
+-               alt="Shark in ocean water"
+-             />
+-             <span>Shark</span>
+-           </div>
+-+
+-+          <div class="animal elephant" data-animal="elephant">
+-+            <img
+-+              src="https://upload.wikimedia.org/wikipedia/commons/3/37/African_Bush_Elephant.jpg"
+-+              alt="Elephant in grassland"
+-+            />
+-+            <span>Elephant</span>
+-+          </div>
+-+
+-+          <div class="animal dolphin" data-animal="dolphin">
+-+            <img
+-+              src="https://upload.wikimedia.org/wikipedia/commons/2/28/Common_dolphin_noaa.jpg"
+-+              alt="Dolphin swimming in the ocean"
+-+            />
+-+            <span>Dolphin</span>
+-+          </div>
+-+
+-+          <div class="animal owl" data-animal="owl">
+-+            <img
+-+              src="https://upload.wikimedia.org/wikipedia/commons/1/14/Bubo_bubo_sibiricus_-_zoo_Madrid.jpg"
+-+              alt="Owl perched on a branch"
+-+            />
+-+            <span>Owl</span>
+-+          </div>
+-+
+-+          <div class="animal penguin" data-animal="penguin">
+-+            <img
+-+              src="https://upload.wikimedia.org/wikipedia/commons/0/00/Aptenodytes_patagonicus_-Salisbury_Plain%2C_South_Georgia%2C_British_overseas_territory-8.jpg"
+-+              alt="Penguin standing in a colony"
+-+            />
+-+            <span>Penguin</span>
+-+          </div>
+-         </div>
+- 
+-         <div class="controls">
+-           <button id="animalPickerBtn" class="primary-btn" type="button">
+-             Choose an animal to listen to
+-           </button>
+-         </div>
+- 
+-         <div class="translator-card" id="translationOutput" aria-live="polite">
+-           <h3>Translation Output</h3>
+-           <p class="label">Animal sound pattern</p>
+-           <p id="soundPattern">—</p>
+-           <p class="label">Human interpretation</p>
+-           <p id="humanMeaning">Choose an animal to generate a translation.</p>
+-         </div>
+-       </section>
+- 
+-       <section class="dashboard" id="dashboard">
+-         <div class="section-head">
+-           <h2>Dashboard</h2>
+-           <p>Profile/account and sign-in details</p>
+-         </div>
+- 
+-         <div class="dashboard-grid">
+-           <article class="card profile-card">
++<!doctype html>
++<html lang="en">
++  <head>
++    <meta charset="UTF-8" />
++    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
++    <title>Xcomm-pro | Animal Sound Translator</title>
++    <link rel="stylesheet" href="Styles.css" />
++  </head>
++  <body>
++    <header class="topbar">
++      <h1>xcomm-pro</h1>
++      <p>Animal sound translation with accessible listener playback.</p>
++    </header>
++
++    <main>
++      <section>
++        <div class="section-head">
++          <h2>Live Habitat</h2>
++          <p>Select an animal and hear the translated message in human speech.</p>
++        </div>
++
++        <div class="habitat-scene" aria-label="Interactive habitat with animals">
++          <div class="animal lion" data-animal="lion">
++            <img src="https://upload.wikimedia.org/wikipedia/commons/7/73/Lion_waiting_in_Namibia.jpg" alt="Lion in savanna" />
++            <span>Lion</span>
++          </div>
++
++          <div class="animal falcon" data-animal="falcon">
++            <img src="https://upload.wikimedia.org/wikipedia/commons/1/16/Falco_peregrinus_good_-_Christopher_Watson.jpg" alt="Falcon in flight" />
++            <span>Falcon</span>
++          </div>
++
++          <div class="animal wolf" data-animal="wolf">
++            <img src="https://upload.wikimedia.org/wikipedia/commons/1/15/2010-kabini-grey-wolf.jpg" alt="Wolf in grassland" />
++            <span>Wolf</span>
++          </div>
++
++          <div class="animal bear" data-animal="bear">
++            <img src="https://upload.wikimedia.org/wikipedia/commons/7/71/2010-brown-bear.jpg" alt="Bear near dry brush" />
++            <span>Bear</span>
++          </div>
++
++          <div class="animal shark" data-animal="shark">
++            <img src="https://upload.wikimedia.org/wikipedia/commons/5/56/White_shark.jpg" alt="Shark in ocean water" />
++            <span>Shark</span>
++          </div>
++        </div>
++
++        <div class="controls">
++          <button id="animalPickerBtn" class="primary-btn" type="button">Choose another animal</button>
++        </div>
++
++        <div class="translator-card" id="translationOutput" aria-live="polite">
++          <h3>Translation Output</h3>
++          <p class="label">Animal sound pattern</p>
++          <p id="soundPattern">—</p>
++          <p class="label">Human interpretation</p>
++          <p id="humanMeaning">Choose an animal to generate a translation.</p>
++          <p class="label">Translated listener phrase</p>
++          <p id="listenerPhrase">The listener phrase appears after translation.</p>
++          <div class="listen-row">
++            <button id="listenBtn" class="secondary-btn" type="button" disabled>🔊 Listen to translation</button>
++            <p id="speechStatus" class="status">Select an animal to enable audio.</p>
++          </div>
++        </div>
++      </section>
++
++      <section class="dashboard" id="dashboard">
++        <div class="section-head">
++          <h2>Dashboard</h2>
++          <p>Profile/account and sign-in details</p>
++        </div>
++
++        <div class="dashboard-grid">
++          <article class="card profile-card">
++            <h3>User profile</h3>
++            <div class="avatar" aria-hidden="true"></div>
++            <p id="lastTranslation">Last translation: none</p>
++            <p>Mode: Listener-friendly narration</p>
++          </article>
++
++          <article class="card signin-card">
++            <h3>Sign in details</h3>
++            <form id="signinForm">
++              <label>
++                Email
++                <input required type="email" name="email" placeholder="listener@example.com" />
++              </label>
++              <label>
++                Access level
++                <select name="accessLevel">
++                  <option value="basic">Basic</option>
++                  <option value="pro">Pro</option>
++                  <option value="research">Research</option>
++                </select>
++              </label>
++              <button class="primary-btn" type="submit">Save details</button>
++            </form>
++            <p id="signinStatus" class="status"></p>
++          </article>
++        </div>
++      </section>
++    </main>
++
++    <dialog id="animalDialog" aria-label="Choose animal dialog">
++      <div class="dialog-header">
++        <h3>Choose an animal to translate</h3>
++        <button type="button" id="closeDialog" aria-label="Close dialog">✕</button>
++      </div>
++      <div id="animalList" class="animal-list"></div>
++    </dialog>
++
++    <script src="app.js"></script>
++  </body>
++</html>
