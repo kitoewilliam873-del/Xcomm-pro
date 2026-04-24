@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Xcomm-pro | Animal Sound Translator</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <h1>Xcomm-pro</h1>
+      <p>Animal Sound ➜ Human Meaning Translator</p>
+    </header>
+
+    <main class="layout">
+      <section class="card habitat" aria-labelledby="habitat-title">
+        <div class="card-head">
+          <h2 id="habitat-title">Habitat Scene</h2>
+          <button id="openAnimalPicker" class="btn btn-secondary" type="button">
+            Choose another animal
+          </button>
+        </div>
+
+        <p class="hint">Pick an animal to simulate an incoming sound.</p>
+
+        <div class="animal-grid" id="habitatAnimals"></div>
+      </section>
+
+      <section class="card translator" aria-labelledby="translator-title">
+        <h2 id="translator-title">Translation Output</h2>
+
+        <div class="output-row">
+          <span class="label">Selected animal</span>
+          <strong id="selectedAnimal">—</strong>
+        </div>
+
+        <div class="output-row">
+          <span class="label">Sound pattern</span>
+          <code id="soundPattern">—</code>
+        </div>
+
+        <div class="output-row">
+          <span class="label">Interpretation</span>
+          <p id="interpretation">Choose an animal to begin.</p>
+        </div>
+
+        <div class="output-row">
+          <span class="label">Translated listener phrase</span>
+          <p id="translatedPhrase">Ready for translation.</p>
+        </div>
+
+        <div class="actions">
+          <button id="listenBtn" class="btn" type="button">🔊 Listen to translation</button>
+          <span id="speechStatus" role="status" aria-live="polite"></span>
+        </div>
+      </section>
+
+      <section class="card dashboard" aria-labelledby="dashboard-title">
+        <h2 id="dashboard-title">Dashboard</h2>
+        <p class="hint">Store your sign-in details locally in this browser session.</p>
+
+        <form id="profileForm" class="form">
+          <label>
+            Full name
+            <input id="fullName" name="fullName" type="text" placeholder="Jane Doe" required />
+          </label>
+
+          <label>
+            Email
+            <input id="email" name="email" type="email" placeholder="jane@example.com" required />
+          </label>
+
+          <label>
+            Role
+            <select id="role" name="role">
+              <option value="Researcher">Researcher</option>
+              <option value="Analyst">Analyst</option>
+              <option value="Volunteer">Volunteer</option>
+            </select>
+          </label>
+
+          <button class="btn" type="submit">Save profile</button>
+          <p id="profileStatus" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
+
+    <dialog id="animalPicker" class="picker">
+      <form method="dialog" class="picker-content">
+        <div class="card-head">
+          <h3>Select an animal</h3>
+          <button class="btn btn-secondary" value="cancel">Close</button>
+        </div>
+        <div id="pickerAnimals" class="animal-grid"></div>
+      </form>
+    </dialog>
+
+    <script src="app.js"></script>
+  </body>
+</html>
