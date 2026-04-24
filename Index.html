@@ -13,23 +13,29 @@
       </div>
       <button id="openSettings" class="menu-btn" type="button" aria-label="Open settings">⋯</button
     </header>
+   <nav class="window-nav" aria-label="Primary">
+      <button class="tab-btn active" data-window="homeWindow" type="button">Home</button>
+      <button class="tab-btn" data-window="selectWindow" type="button">Choose Animal</button>
+      <button class="tab-btn" data-window="liveWindow" type="button">Live Translate</button>
+    </nav>
 
-    <main class="layout">
-      <section class="card habitat" aria-labelledby="habitat-title">
-        <div class="card-head">
-          <h2 id="habitat-title">Habitat Scene</h2>
-          <button id="openAnimalPicker" class="btn btn-secondary" type="button">
-            Choose another animal
-          </button>
-        </div>
+    <main class="window-shell">
+      <section id="homeWindow" class="window-card active" aria-labelledby="home-title">
+        <h2 id="home-title">Welcome to Xcomm-pro</h2>
+        <p>
+          This homepage gives an overview of how the app listens to real-time animal sounds from your microphone,
+          interprets the signal, and converts it to a human-understandable phrase instantly.
+        </p>
+        <p class="muted">
+          Use the three-dot menu (top right) for settings like sound detection distance. For best performance over
+          10 meters, use a directional microphone and low-noise environment.
+        </p>
 
-        <p class="hint">Pick an animal to simulate an incoming sound.</p>
-
-        <div class="animal-grid" id="habitatAnimals"></div>
+        <div class="hero-gallery" id="heroGallery"></div>
       </section>
+    
 
-      <section class="card translator" aria-labelledby="translator-title">
-        <h2 id="translator-title">Translation Output</h2>
+        </h2>
 
         <div class="output-row">
           <span class="label">Selected animal</span>
