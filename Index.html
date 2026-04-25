@@ -14,22 +14,25 @@
       </div>
 
       <div class="menu-wrap">
-        <button id="openQuickMenu" class="menu-btn" type="button" aria-label="Open quick menu">⋯</button>
+                <button id="openQuickMenu" class="menu-btn" type="button" aria-label="Open quick menu">⋯</button>
         <div id="quickMenu" class="quick-menu" hidden>
-          <button class="menu-item" data-window="homeWindow" type="button">Home Overview</button>
+          <button class="menu-item" data-window="dashboardWindow" type="button">Dashboard</button>
           <button class="menu-item" data-window="selectWindow" type="button">Choose Animal</button>
           <button class="menu-item" data-window="liveWindow" type="button">Live Translate</button>
+          <button class="menu-item" data-window="homeWindow" type="button">Home Overview</button>
           <button class="menu-item" id="openSettings" type="button">Settings</button>
         </div>
-      </div>
+        </div>
     </header>
-    <nav class="window-nav" aria-label="Primary">
+   
+        <nav class="window-nav" aria-label="Primary">
       <button class="tab-btn active" data-window="homeWindow" type="button">Home</button>
+      <button class="tab-btn" data-window="dashboardWindow" type="button">Dashboard</button>
       <button class="tab-btn" data-window="selectWindow" type="button">Choose Animal</button>
       <button class="tab-btn" data-window="liveWindow" type="button">Live Translate</button>
-    </nav>
-
-    <main class="window-shell">
+        </nav>
+    
+ <main class="window-shell">
       <section id="homeWindow" class="window-card active" aria-labelledby="home-title">
         <h2 id="home-title">Welcome to Xcomm-pro</h2>
         <p>
@@ -37,20 +40,53 @@
           characteristics, and converts detected animal vocal signals into human-understandable speech.
         </p>
         <p class="muted">
-          Use the top-right three-dot menu to navigate quickly and adjust settings like detection distance,
-          sensitivity, and instant voice output.
+          Use the top-right three-dot menu to navigate quickly to Dashboard, Choose Animal, Settings, and Live
+          Translate.
         </p>
 
         <div class="hero-gallery" id="heroGallery"></div>
       </section>
+
+      <section id="dashboardWindow" class="window-card" aria-labelledby="dashboard-title">
+        <h2 id="dashboard-title">Dashboard</h2>
+   
+          <div class="readout-grid">
+          <article>
+            <span class="label">Current animal</span>
+            <strong id="dashAnimal">—</strong>
+          </article>
+          <article>
+            <span class="label">Configured range</span>
+            <strong id="dashRange">12 meters</strong>
+          </article>
+          <article>
+            <span class="label">Sensitivity</span>
+            <strong id="dashSensitivity">2</strong>
+          </article>
+          <article>
+            <span class="label">Auto speak</span>
+            <strong id="dashAutoSpeak">Off</strong>
+          </article>
+          </div>  
+    
+           <div class="panel">
+          <span class="label">Session notes</span>
+          <p class="muted">
+            Use this dashboard as your control center before opening live translation. Start by choosing your target
+            animal profile.
+          </p>
+        </div>
+      </section> 
+    
       <section id="selectWindow" class="window-card" aria-labelledby="select-title">
         <div class="section-head">
           <h2 id="select-title">Select Animal Target</h2>
           <p class="muted">Choose which animal profile the live interpreter should prioritize.</p>
         </div>
         <div class="animal-grid" id="animalSelector"></div>
-      </section>
-            <section id="liveWindow" class="window-card" aria-labelledby="live-title">
+      </section>    
+    
+          <section id="liveWindow" class="window-card" aria-labelledby="live-title">
         <h2 id="live-title">Live Translation Window</h2>
 
         <div class="readout-grid">
@@ -79,36 +115,39 @@
             <strong id="confidenceScore">Waiting…</strong>
           </article>
         </div>
-                <div class="panel">
+    
+            <div class="panel">
           <span class="label">Interpreted meaning</span>
           <p id="interpretedMeaning">Tap “Start Live Capture” to listen now.</p>
-                </div>
-                        <div class="panel">
+            </div>
+    
+            <div class="panel">
           <span class="label">Human speech translation</span>
           <p id="humanSpeech">Translation will appear instantly after incoming sound is detected.</p>
-        </div>
-
-        <div class="actions">
-                    <button id="startCapture" class="btn" type="button">🎙️ Start Live Capture</button>
+            </div>
+    
+            <div class="actions">
+              <button id="startCapture" class="btn" type="button">🎙️ Start Live Capture</button>
           <button id="stopCapture" class="btn btn-secondary" type="button" disabled>Stop</button>
           <button id="speakNow" class="btn" type="button">🔊 Speak Translation</button>
           <span id="liveStatus" class="muted" role="status" aria-live="polite"></span>
         </div>
-            </section>
-    </main>
-        <dialog id="settingsDialog" class="dialog">
+          </section>
+ </main>
+
+    <dialog id="settingsDialog" class="dialog">
       <form class="dialog-content" id="settingsForm">
         <div class="section-head">
           <h3>Settings</h3>
           <button class="btn btn-secondary" id="closeSettings" type="button">Close</button>
         </div>
-        
+
         <label>
           Sound detection distance
           <input id="distanceRange" type="range" min="10" max="40" step="1" value="12" />
         </label>
         <p class="muted">Current distance: <strong id="distanceValue">12</strong> meters.</p>
-        
+
         <label>
           Detection sensitivity
           <input id="sensitivityRange" type="range" min="1" max="3" step="1" value="2" />
