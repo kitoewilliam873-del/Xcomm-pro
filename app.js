@@ -2,243 +2,432 @@ const ANIMALS = [
   {
     id: 'lion',
     name: 'Lion',
-    emoji: '🦁',
     habitat: 'Savanna',
-    sound: 'ROAR-RR-ROAR',
-    interpretation: 'Territorial warning with confidence and alertness.',
-    phrase: 'I am here. Keep your distance and respect this territory.'
-  },
-  {
-    id: 'falcon',
-    name: 'Falcon',
-    emoji: '🦅',
-    habitat: 'Cliffs',
-    sound: 'KREE-KREE',
-    interpretation: 'High-altitude signal for attention and navigation.',
-    phrase: 'Focus now. I see movement and we need quick coordination.'
-  },
-  {
-    id: 'wolf',
-    name: 'Wolf',
-    emoji: '🐺',
-    habitat: 'Forest',
-    sound: 'AOOO-HOWL',
-    interpretation: 'Pack-location and social-bond communication.',
-    phrase: 'Where are you? Stay close so the group can move together.'
-  },
-  {
-    id: 'bear',
-    name: 'Bear',
-    emoji: '🐻',
-    habitat: 'Mountain',
-    sound: 'GRUFF-HUMPH',
-    interpretation: 'Boundary-setting and cautious evaluation.',
-    phrase: 'I am uncomfortable. Please give me space.'
-  },
-  {
-    id: 'shark',
-    name: 'Shark',
-    emoji: '🦈',
-    habitat: 'Ocean',
-    sound: 'LOW-FIN-RUSH',
-    interpretation: 'Movement cue linked to pursuit and positioning.',
-    phrase: 'Target detected. Maintain direction and momentum.'
-  },
-  {
-    id: 'cat',
-    name: 'Cat',
-    emoji: '🐱',
-    habitat: 'Domestic',
-    sound: 'MEOW-PRR',
-    interpretation: 'Comfort request with social friendliness.',
-    phrase: 'Hello there. I would like attention and maybe a snack.'
-  },
-  {
-    id: 'cheetah',
-    name: 'Cheetah',
-    emoji: '🐆',
-    habitat: 'Grassland',
-    sound: 'CHIRP-CHIRP',
-    interpretation: 'Close-range coordination before movement.',
-    phrase: 'Stay in sync with me. We are about to move quickly.'
+    freqRange: [80, 450],
+    image:
+      'https://images.unsplash.com/photo-1546182990-dffeafbe841d?auto=format&fit=crop&w=1000&q=80',
+    templates: {
+      calm: 'I am calm and scanning this area.',
+      alert: 'I sense movement. Keep your distance respectfully.',
+      urgent: 'Immediate warning. Move back now.'
+    }
   },
   {
     id: 'elephant',
     name: 'Elephant',
-    emoji: '🐘',
-    habitat: 'Savanna',
-    sound: 'RUMBLE-TRUMPET',
-    interpretation: 'Long-distance family contact and guidance.',
-    phrase: 'Family, gather here. It is time to travel safely together.'
+    habitat: 'Grassland',
+    freqRange: [20, 280],
+    image:
+      'https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?auto=format&fit=crop&w=1000&q=80',
+    templates: {
+      calm: 'Family group is settled and close.',
+      alert: 'Regroup here and remain coordinated.',
+      urgent: 'Urgent trumpet signal. Protect the herd now.'
+    }
   },
   {
-    id: 'dolphin',
-    name: 'Dolphin',
-    emoji: '🐬',
-    habitat: 'Ocean',
-    sound: 'CLICK-WHISTLE',
-    interpretation: 'Social greeting paired with sonar scanning.',
-    phrase: 'Hi team, I am checking the area and it looks clear.'
+    id: 'wolf',
+    name: 'Wolf',
+    habitat: 'Forest',
+    freqRange: [150, 900],
+    image:
+      'https://images.unsplash.com/photo-1474511320723-9a56873867b5?auto=format&fit=crop&w=1000&q=80',
+    templates: {
+      calm: 'Pack is nearby and connected.',
+      alert: 'Pack call detected. Hold formation.',
+      urgent: 'High urgency howl. Threat is near.'
+    }
   },
   {
     id: 'owl',
     name: 'Owl',
-    emoji: '🦉',
     habitat: 'Woodland',
-    sound: 'HOO-HOO',
-    interpretation: 'Night-position beacon with calm awareness.',
-    phrase: 'I am nearby and watching. The night remains quiet.'
+    freqRange: [250, 1400],
+    image:
+      'https://images.unsplash.com/photo-1444464666168-49d633b86797?auto=format&fit=crop&w=1000&q=80',
+    templates: {
+      calm: 'Quiet patrol call in the night.',
+      alert: 'Attention call: movement detected nearby.',
+      urgent: 'Sharp warning call. Immediate disturbance present.'
+    }
   },
   {
-    id: 'penguin',
-    name: 'Penguin',
-    emoji: '🐧',
-    habitat: 'Polar coast',
-    sound: 'HONK-BRAY',
-    interpretation: 'Nest and partner recognition call.',
-    phrase: 'I found you. Let us stay together and protect the nest.'
+    id: 'dolphin',
+    name: 'Dolphin',
+    habitat: 'Ocean',
+    freqRange: [2000, 12000],
+    image:
+      'https://images.unsplash.com/photo-1560275619-4662e36fa65c?auto=format&fit=crop&w=1000&q=80',
+    templates: {
+      calm: 'Pod is coordinated and moving smoothly.',
+      alert: 'Sonar alert. Directional movement detected.',
+      urgent: 'High-priority pod alert. Change course now.'
+    }
+  },
+  {
+    id: 'cheetah',
+    name: 'Cheetah',
+    habitat: 'Grassland',
+        freqRange: [300, 1700],
+    image:
+      'https://images.unsplash.com/photo-1534188753412-3e26d0d618d6?auto=format&fit=crop&w=1000&q=80',
+    templates: {
+      calm: 'Close-range communication is stable.',
+      alert: 'Coordination chirp detected before movement.',
+      urgent: 'Fast-response alarm. Stay synchronized now.'
+    }
   }
 ];
 
 const state = {
   selectedAnimal: ANIMALS[0],
-  utterance: null
+  detectionDistance: 12,
+  sensitivity: 2,
+  autoSpeak: false,
+  stream: null,
+  audioContext: null,
+  analyser: null,
+  listening: false,
+  loopId: null,
+  lastSpokenText: '',
+  latestTranslation: 'Translation will appear instantly after incoming sound is detected.',
+  noiseFloor: 0.02
 };
 
-const habitatAnimals = document.getElementById('habitatAnimals');
-const pickerAnimals = document.getElementById('pickerAnimals');
+const heroGallery = document.getElementById('heroGallery');
+const animalSelector = document.getElementById('animalSelector');
 const selectedAnimalEl = document.getElementById('selectedAnimal');
-const soundPatternEl = document.getElementById('soundPattern');
-const interpretationEl = document.getElementById('interpretation');
-const translatedPhraseEl = document.getElementById('translatedPhrase');
-const speechStatusEl = document.getElementById('speechStatus');
-const listenBtn = document.getElementById('listenBtn');
-const openAnimalPickerBtn = document.getElementById('openAnimalPicker');
-const animalPicker = document.getElementById('animalPicker');
-const profileForm = document.getElementById('profileForm');
-const profileStatus = document.getElementById('profileStatus');
+const configuredRange = document.getElementById('configuredRange');
+const estimatedDistance = document.getElementById('estimatedDistance');
+const liveIntensity = document.getElementById('liveIntensity');
+const dominantFrequency = document.getElementById('dominantFrequency');
+const confidenceScore = document.getElementById('confidenceScore');
+const interpretedMeaning = document.getElementById('interpretedMeaning');
+const humanSpeech = document.getElementById('humanSpeech');
+const liveStatus = document.getElementById('liveStatus');
+const startCapture = document.getElementById('startCapture');
+const stopCapture = document.getElementById('stopCapture');
+const speakNow = document.getElementById('speakNow');
+const openQuickMenu = document.getElementById('openQuickMenu');
+const quickMenu = document.getElementById('quickMenu');
+const openSettings = document.getElementById('openSettings');
+const settingsDialog = document.getElementById('settingsDialog');
+const closeSettings = document.getElementById('closeSettings');
+const distanceRange = document.getElementById('distanceRange');
+const distanceValue = document.getElementById('distanceValue');
+const sensitivityRange = document.getElementById('sensitivityRange');
+const sensitivityValue = document.getElementById('sensitivityValue');
+const autoSpeak = document.getElementById('autoSpeak');
+const tabButtons = document.querySelectorAll('.tab-btn');
+const windows = document.querySelectorAll('.window-card');
 
-function cardTemplate(animal) {
-  return `
-    <button class="animal-card" type="button" data-animal-id="${animal.id}" aria-label="Select ${animal.name}">
-      <span class="emoji" aria-hidden="true">${animal.emoji}</span>
-      <strong>${animal.name}</strong><br>
-      <small>${animal.habitat}</small>
-    </button>
-  `;
+function renderHomeGallery() {
+  heroGallery.innerHTML = ANIMALS.map(
+    (animal) => `
+      <article class="hero-tile" style="background-image:url('${animal.image}')">
+        <span><strong>${animal.name}</strong> · ${animal.habitat}</span>
+      </article>
+    `
+  ).join('');
 }
 
-function renderAnimalLists() {
-  const cards = ANIMALS.map(cardTemplate).join('');
-  habitatAnimals.innerHTML = cards;
-  pickerAnimals.innerHTML = cards;
+function renderAnimalSelector() {
+  animalSelector.innerHTML = ANIMALS.map(
+    (animal) => `
+      <button class="animal-card ${animal.id === state.selectedAnimal.id ? 'active' : ''}" type="button" data-animal-id="${animal.id}">
+        <img src="${animal.image}" alt="${animal.name}" loading="lazy" />
+        <div class="info">
+          <strong>${animal.name}</strong><br />
+          <small>${animal.habitat}</small>
+        </div>
+      </button>
+    `
+  ).join('');
 }
 
-function updateTranslator(animal) {
-  state.selectedAnimal = animal;
-  selectedAnimalEl.textContent = `${animal.emoji} ${animal.name}`;
-  soundPatternEl.textContent = animal.sound;
-  interpretationEl.textContent = animal.interpretation;
-  translatedPhraseEl.textContent = animal.phrase;
-  speechStatusEl.textContent = '';
+function updateReadout() {
+  selectedAnimalEl.textContent = state.selectedAnimal.name;
+  configuredRange.textContent = `${state.detectionDistance} meters`;
+  humanSpeech.textContent = state.latestTranslation;
 }
 
-function selectAnimalById(animalId, closePicker = false) {
-  const animal = ANIMALS.find((item) => item.id === animalId);
-  if (!animal) return;
-  updateTranslator(animal);
-  if (closePicker && animalPicker.open) {
-    animalPicker.close();
+function goToWindow(windowId) {
+  tabButtons.forEach((btn) => {
+    btn.classList.toggle('active', btn.dataset.window === windowId);
+  });
+
+  windows.forEach((win) => {
+    win.classList.toggle('active', win.id === windowId);
+  });
+}
+
+function levelFromEnergy(normalizedEnergy) {
+  const baseThreshold = [0.03, 0.06, 0.09][state.sensitivity - 1];
+  if (normalizedEnergy > baseThreshold * 2.2) return 'urgent';
+  if (normalizedEnergy > baseThreshold * 1.4) return 'alert';
+  return 'calm';
+}
+
+function calcDominantFrequency(freqData, sampleRate) {
+  let peakIndex = 0;
+  let peak = -1;
+
+  for (let i = 1; i < freqData.length; i += 1) {
+    if (freqData[i] > peak) {
+      peak = freqData[i];
+      peakIndex = i;
+    }
   }
+
+  return Math.round((peakIndex * sampleRate) / (2 * freqData.length));
 }
 
-function speakTranslation() {
-  const canSpeak = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
+function estimateDistanceMeters(normalizedEnergy) {
+  const scaled = Math.max(normalizedEnergy, 0.002);
+  const estimated = Math.round(Math.min(40, Math.max(1, (0.16 / scaled) * 2.7)));
+  return estimated;
+}
 
-  if (!canSpeak) {
-    speechStatusEl.textContent = 'Speech playback is unavailable in this browser.';
+function confidenceForAnimal(freqHz) {
+  const [minHz, maxHz] = state.selectedAnimal.freqRange;
+  const center = (minHz + maxHz) / 2;
+  const halfBand = (maxHz - minHz) / 2;
+  const offset = Math.abs(freqHz - center);
+  const normalized = Math.max(0, 1 - offset / Math.max(halfBand, 1));
+  return Math.round(35 + normalized * 65);
+}
+
+function speakText(message) {
+  if (!('speechSynthesis' in window)) {
+    liveStatus.textContent = 'Speech output is unavailable in this browser.';
     return;
   }
 
   window.speechSynthesis.cancel();
-
-  state.utterance = new SpeechSynthesisUtterance(state.selectedAnimal.phrase);
-  state.utterance.lang = 'en-US';
-  state.utterance.rate = 1;
-  state.utterance.pitch = 1;
-
-  state.utterance.onstart = () => {
-    speechStatusEl.textContent = 'Playing translation...';
-  };
-
-  state.utterance.onend = () => {
-    speechStatusEl.textContent = 'Playback complete.';
-  };
-
-  state.utterance.onerror = () => {
-    speechStatusEl.textContent = 'Unable to play audio right now.';
-  };
-
-  window.speechSynthesis.speak(state.utterance);
+  const utterance = new SpeechSynthesisUtterance(message);
+  utterance.lang = 'en-US';
+  window.speechSynthesis.speak(utterance);
 }
 
-function restoreProfile() {
-  const saved = localStorage.getItem('xcomm_profile');
-  if (!saved) return;
+function processLiveAudio() {
+  if (!state.analyser || !state.listening) return;
+
+  const timeData = new Float32Array(state.analyser.fftSize);
+  const freqData = new Uint8Array(state.analyser.frequencyBinCount);
+  state.analyser.getFloatTimeDomainData(timeData);
+  state.analyser.getByteFrequencyData(freqData);
+
+  const squareMean = timeData.reduce((sum, sample) => sum + sample * sample, 0) / timeData.length;
+  const rms = Math.sqrt(squareMean);
+  const dominantHz = calcDominantFrequency(freqData, state.audioContext.sampleRate);
+
+state.noiseFloor = state.noiseFloor * 0.97 + rms * 0.03;
+  const normalizedEnergy = Math.max(0, rms - state.noiseFloor);
+
+  liveIntensity.textContent = `${normalizedEnergy.toFixed(4)}`;
+  dominantFrequency.textContent = `${dominantHz} Hz`;
+
+  if (normalizedEnergy > 0.003) {
+    const level = levelFromEnergy(normalizedEnergy);
+    const estimated = estimateDistanceMeters(normalizedEnergy);
+    const confidence = confidenceForAnimal(dominantHz);
+
+    estimatedDistance.textContent = `~${estimated} meters`;
+    confidenceScore.textContent = `${confidence}%`;
+    
+        const meaning = `${state.selectedAnimal.name} profile detected with ${level} intensity at ${dominantHz} Hz.`;
+    interpretedMeaning.textContent = meaning;
+
+    const translation = state.selectedAnimal.templates[level];
+    state.latestTranslation = translation;
+    humanSpeech.textContent = translation;
+
+    const inRange = estimated <= state.detectionDistance;
+    liveStatus.innerHTML = inRange
+      ? `<span class="good">Live detection in-range (${state.detectionDistance}m target)</span>`
+      : `Detected beyond configured range (${state.detectionDistance}m). Increase distance in settings.`;
+
+    if (state.autoSpeak && state.lastSpokenText !== translation) {
+      state.lastSpokenText = translation;
+      speakText(translation);
+    }
+  } else {
+    liveStatus.textContent = 'Listening... no strong animal-like signal yet.';
+  }
+
+  state.loopId = window.setTimeout(processLiveAudio, 250);
+}
+
+async function startLiveCapture() {
+  if (state.listening) return;
+
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    liveStatus.textContent = 'Microphone access is unavailable in this browser.';
+    return;
+  }
 
   try {
-    const profile = JSON.parse(saved);
-    if (profile.fullName) document.getElementById('fullName').value = profile.fullName;
-    if (profile.email) document.getElementById('email').value = profile.email;
-    if (profile.role) document.getElementById('role').value = profile.role;
+    const stream = await navigator.mediaDevices.getUserMedia({
+      audio: {
+        echoCancellation: true,
+        noiseSuppression: true,
+        autoGainControl: true
+      }
+    });
+
+    const audioContext = new AudioContext();
+    const source = audioContext.createMediaStreamSource(stream);
+    const analyser = audioContext.createAnalyser();
+    analyser.fftSize = 2048;
+    analyser.smoothingTimeConstant = 0.6;
+    source.connect(analyser);
+
+    state.stream = stream;
+    state.audioContext = audioContext;
+    state.analyser = analyser;
+    state.listening = true;
+
+    startCapture.disabled = true;
+    stopCapture.disabled = false;
+    liveStatus.textContent = 'Live capture started.';
+
+    processLiveAudio();
   } catch {
-    // if malformed data exists, ignore and continue
+    liveStatus.textContent = 'Microphone permission denied or unavailable.';
   }
 }
 
-function saveProfile(event) {
-  event.preventDefault();
-  const formData = new FormData(profileForm);
-  const profile = {
-    fullName: String(formData.get('fullName') || '').trim(),
-    email: String(formData.get('email') || '').trim(),
-    role: String(formData.get('role') || '').trim()
-  };
+function stopLiveCapture() {
+  if (!state.listening) return;
 
-  localStorage.setItem('xcomm_profile', JSON.stringify(profile));
-  profileStatus.textContent = `Saved for ${profile.fullName} (${profile.role}).`;
+  if (state.loopId) {
+    window.clearTimeout(state.loopId);
+    state.loopId = null;
+  }
+
+  if (state.stream) {
+    state.stream.getTracks().forEach((track) => track.stop());
+  }
+
+  if (state.audioContext) {
+    state.audioContext.close();
+  }
+
+  state.stream = null;
+  state.audioContext = null;
+  state.analyser = null;
+  state.listening = false;
+
+  startCapture.disabled = false;
+  stopCapture.disabled = true;
+  liveStatus.textContent = 'Capture stopped.';
+}
+
+function saveSettings() {
+  state.detectionDistance = Number(distanceRange.value);
+  state.sensitivity = Number(sensitivityRange.value);
+  state.autoSpeak = autoSpeak.checked;
+
+  localStorage.setItem('xcomm_distance', String(state.detectionDistance));
+  localStorage.setItem('xcomm_sensitivity', String(state.sensitivity));
+  localStorage.setItem('xcomm_auto_speak', String(state.autoSpeak));
+
+  updateReadout();
+  liveStatus.textContent = `Saved: ${state.detectionDistance}m range, sensitivity ${state.sensitivity}.`;
+}
+
+function restoreSettings() {
+  const savedDistance = Number(localStorage.getItem('xcomm_distance'));
+  const savedSensitivity = Number(localStorage.getItem('xcomm_sensitivity'));
+  const savedAutoSpeak = localStorage.getItem('xcomm_auto_speak');
+
+  if (savedDistance >= 10 && savedDistance <= 40) {
+    state.detectionDistance = savedDistance;
+  }
+
+  if (savedSensitivity >= 1 && savedSensitivity <= 3) {
+    state.sensitivity = savedSensitivity;
+  }
+
+  if (savedAutoSpeak === 'true' || savedAutoSpeak === 'false') {
+    state.autoSpeak = savedAutoSpeak === 'true';
+  }
+
+  distanceRange.value = String(state.detectionDistance);
+  distanceValue.textContent = String(state.detectionDistance);
+  sensitivityRange.value = String(state.sensitivity);
+  sensitivityValue.textContent = String(state.sensitivity);
+  autoSpeak.checked = state.autoSpeak;
 }
 
 function bindEvents() {
-  habitatAnimals.addEventListener('click', (event) => {
-    const button = event.target.closest('[data-animal-id]');
-    if (!button) return;
-    selectAnimalById(button.dataset.animalId, false);
+  tabButtons.forEach((button) => {
+    button.addEventListener('click', () => goToWindow(button.dataset.window));
   });
 
-  pickerAnimals.addEventListener('click', (event) => {
-    const button = event.target.closest('[data-animal-id]');
-    if (!button) return;
-    selectAnimalById(button.dataset.animalId, true);
+  openQuickMenu.addEventListener('click', () => {
+    quickMenu.hidden = !quickMenu.hidden;
   });
 
-  openAnimalPickerBtn.addEventListener('click', () => {
-    if (typeof animalPicker.showModal === 'function') {
-      animalPicker.showModal();
-    } else {
-      speechStatusEl.textContent = 'Animal picker dialog is not supported in this browser.';
+  document.addEventListener('click', (event) => {
+    if (!event.target.closest('.menu-wrap')) {
+      quickMenu.hidden = true;
     }
   });
 
-  listenBtn.addEventListener('click', speakTranslation);
-  profileForm.addEventListener('submit', saveProfile);
+  quickMenu.addEventListener('click', (event) => {
+    const menuButton = event.target.closest('.menu-item[data-window]');
+    if (!menuButton) return;
+    goToWindow(menuButton.dataset.window);
+    quickMenu.hidden = true;
+  });
+
+  openSettings.addEventListener('click', () => {
+    quickMenu.hidden = true;
+    settingsDialog.showModal();
+  });
+
+  closeSettings.addEventListener('click', () => {
+    settingsDialog.close();
+  });
+
+  distanceRange.addEventListener('input', () => {
+    distanceValue.textContent = distanceRange.value;
+  });
+
+  sensitivityRange.addEventListener('input', () => {
+    sensitivityValue.textContent = sensitivityRange.value;
+  });
+
+    document.getElementById('settingsForm').addEventListener('submit', (event) => {
+    event.preventDefault();
+    saveSettings();
+    settingsDialog.close();
+  });
+
+  animalSelector.addEventListener('click', (event) => {
+    const card = event.target.closest('[data-animal-id]');
+    if (!card) return;
+
+    const selected = ANIMALS.find((animal) => animal.id === card.dataset.animalId);
+    if (!selected) return;
+
+    state.selectedAnimal = selected;
+    renderAnimalSelector();
+    updateReadout();
+  });
+
+  startCapture.addEventListener('click', startLiveCapture);
+  stopCapture.addEventListener('click', stopLiveCapture);
+  speakNow.addEventListener('click', () => speakText(state.latestTranslation));
 }
 
-function init() {
-  renderAnimalLists();
+function init() {  
+  restoreSettings();
+  renderHomeGallery();
+  renderAnimalSelector();
+  updateReadout();
   bindEvents();
-  restoreProfile();
-  updateTranslator(state.selectedAnimal);
 }
 
 init();
