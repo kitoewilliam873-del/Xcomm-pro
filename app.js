@@ -77,6 +77,84 @@ const ANIMALS = [
       urgent: 'Fast-response alarm. Stay synchronized now.'
     }
   }
+  {
+    id: 'cat',
+    name: 'Cat', 
+    freqRange: [400, 1200],
+    image:
+      'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=1000&q=80',
+    templates: {
+      calm: 'I am calm and requesting gentle attention.',
+      alert: 'I sense movement and I am cautious.',
+      urgent: 'Sharp distress call: I need immediate space or help.'
+    }
+  },
+{
+    id: 'dog',
+    name: 'Dog',
+    habitat: 'Domestic',
+    freqRange: [300, 1000],
+    image:
+      'https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=1000&q=80',
+    templates: {
+      calm: 'I am relaxed and friendly nearby.',
+      alert: 'I hear something unusual. Stay aware.',
+      urgent: 'Warning bark: immediate attention needed.'
+    }
+  },
+      {
+
+    id: 'cow',
+    name: 'Cow',
+    habitat: 'Farm',
+    freqRange: [80, 300],
+    image:
+      'https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=1000&q=80',
+    templates: {
+      calm: 'The herd is settled and grazing peacefully.',
+      alert: 'I am calling for herd attention.',
+      urgent: 'Strong distress moo: herd safety response needed.'
+    }
+  },
+  {
+    id: 'sheep',
+    name: 'Sheep',
+    habitat: 'Farm',
+    freqRange: [120, 600],
+    image:
+      'https://images.unsplash.com/photo-1472396961693-142e6e269027?auto=format&fit=crop&w=1000&q=80',
+    templates: {
+      calm: 'Group is calm and close together.',
+      alert: 'I am calling to stay with the flock.',
+      urgent: 'Loud bleat indicates stress and separation risk.'
+    }
+  },
+      {
+    id: 'goat',
+    name: 'Goat',
+    habitat: 'Farm',
+    freqRange: [140, 700],
+    image:
+      'https://images.unsplash.com/photo-1524024973431-2ad916746881?auto=format&fit=crop&w=1000&q=80',
+    templates: {
+      calm: 'I am nearby and communicating normally.',
+      alert: 'I am signaling to regroup and stay close.',
+      urgent: 'Urgent bleat: immediate disruption detected.'
+    }
+  },
+  {
+    id: 'birds',
+    name: 'Birds',
+    habitat: 'Aerial',
+    freqRange: [1000, 8000],
+    image:
+      'https://images.unsplash.com/photo-1444464666168-49d633b86797?auto=format&fit=crop&w=1000&q=80',
+    templates: {
+      calm: 'Flock chatter indicates normal activity.',
+      alert: 'Alarm chirps suggest nearby movement.',
+      urgent: 'Intense flock alarm: immediate threat overhead.'
+    }
+  }
 ];
 
 const state = {
@@ -105,6 +183,10 @@ const confidenceScore = document.getElementById('confidenceScore');
 const interpretedMeaning = document.getElementById('interpretedMeaning');
 const humanSpeech = document.getElementById('humanSpeech');
 const liveStatus = document.getElementById('liveStatus');
+const dashAnimal = document.getElementById('dashAnimal');
+const dashRange = document.getElementById('dashRange');
+const dashSensitivity = document.getElementById('dashSensitivity');
+const dashAutoSpeak = document.getElementById('dashAutoSpeak');
 const startCapture = document.getElementById('startCapture');
 const stopCapture = document.getElementById('stopCapture');
 const speakNow = document.getElementById('speakNow');
@@ -122,13 +204,15 @@ const tabButtons = document.querySelectorAll('.tab-btn');
 const windows = document.querySelectorAll('.window-card');
 
 function renderHomeGallery() {
-  heroGallery.innerHTML = ANIMALS.map(
-    (animal) => `
+  heroGallery.innerHTML = ANIMALS.slice(0, 6)
+    .map(
+      (animal) => `
       <article class="hero-tile" style="background-image:url('${animal.image}')">
         <span><strong>${animal.name}</strong> · ${animal.habitat}</span>
       </article>
     `
-  ).join('');
+    )
+    .join('');
 }
 
 function renderAnimalSelector() {
@@ -149,6 +233,11 @@ function updateReadout() {
   selectedAnimalEl.textContent = state.selectedAnimal.name;
   configuredRange.textContent = `${state.detectionDistance} meters`;
   humanSpeech.textContent = state.latestTranslation;
+
+  dashAnimal.textContent = state.selectedAnimal.name;
+  dashRange.textContent = `${state.detectionDistance} meters`;
+  dashSensitivity.textContent = String(state.sensitivity);
+  dashAutoSpeak.textContent = state.autoSpeak ? 'On' : 'Off';
 }
 
 function goToWindow(windowId) {
@@ -188,6 +277,60 @@ function estimateDistanceMeters(normalizedEnergy) {
   return estimated;
 }
 
+
+
+function bandEnergyRatio(freqData, sampleRate, minHz, maxHz) {
+  const nyquist = sampleRate / 2;
+  const minIndex = Math.max(0, Math.floor((minHz / nyquist) * freqData.length));
+  const maxIndex = Math.min(freqData.length - 1, Math.ceil((maxHz / nyquist) * freqData.length));
+
+  let bandEnergy = 0;
+  let totalEnergy = 0;
+
+  for (let i = 0; i < freqData.length; i += 1) {
+    totalEnergy += freqData[i];
+    if (i >= minIndex && i <= maxIndex) {
+      bandEnergy += freqData[i];
+    }
+  }
+
+  return totalEnergy > 0 ? bandEnergy / totalEnergy : 0;
+}
+
+function spectralFlatness(freqData) {
+  let geoMean = 1;
+  let arithMean = 0;
+  const epsilon = 1e-6;
+
+  for (let i = 1; i < freqData.length; i += 1) {
+    const value = freqData[i] + epsilon;
+    geoMean *= Math.pow(value, 1 / (freqData.length - 1));
+    arithMean += value;
+  }
+
+  arithMean /= Math.max(1, freqData.length - 1);
+  return arithMean > 0 ? geoMean / arithMean : 1;
+}
+
+function isLikelyAnimalSignal(freqData, sampleRate, dominantHz) {
+  const [minHz, maxHz] = state.selectedAnimal.freqRange;
+  const expandedMin = Math.max(20, minHz * 0.8);
+  const expandedMax = maxHz * 1.2;
+  const inRange = dominantHz >= expandedMin && dominantHz <= expandedMax;
+  const ratio = bandEnergyRatio(freqData, sampleRate, expandedMin, expandedMax);
+  const flatness = spectralFlatness(freqData);
+
+  const enoughBandEnergy = ratio >= 0.18;
+  const notBroadbandNoise = flatness <= 0.82;
+
+  return inRange && enoughBandEnergy && notBroadbandNoise;
+}
+
+function isWithinTargetDistance(estimated, target) {
+  const tolerance = Math.max(2, Math.round(target * 0.2));
+  return Math.abs(estimated - target) <= tolerance;
+}
+
 function confidenceForAnimal(freqHz) {
   const [minHz, maxHz] = state.selectedAnimal.freqRange;
   const center = (minHz + maxHz) / 2;
@@ -221,35 +364,52 @@ function processLiveAudio() {
   const rms = Math.sqrt(squareMean);
   const dominantHz = calcDominantFrequency(freqData, state.audioContext.sampleRate);
 
-state.noiseFloor = state.noiseFloor * 0.97 + rms * 0.03;
+  state.noiseFloor = state.noiseFloor * 0.97 + rms * 0.03;
   const normalizedEnergy = Math.max(0, rms - state.noiseFloor);
 
   liveIntensity.textContent = `${normalizedEnergy.toFixed(4)}`;
   dominantFrequency.textContent = `${dominantHz} Hz`;
 
   if (normalizedEnergy > 0.003) {
+    const animalLike = isLikelyAnimalSignal(freqData, state.audioContext.sampleRate, dominantHz);
+
+    if (!animalLike) {
+      interpretedMeaning.textContent =
+        'Distractive or non-animal sound filtered out. Waiting for a cleaner animal vocal signal.';
+      humanSpeech.textContent =
+        'Translation locked: only target-animal-like signals are allowed for higher accuracy.';
+      confidenceScore.textContent = '0%';
+      liveStatus.textContent = 'Noise filter active: ignoring non-animal sounds.';
+      state.loopId = window.setTimeout(processLiveAudio, 250);
+      return;
+    }
+
     const level = levelFromEnergy(normalizedEnergy);
     const estimated = estimateDistanceMeters(normalizedEnergy);
     const confidence = confidenceForAnimal(dominantHz);
 
     estimatedDistance.textContent = `~${estimated} meters`;
     confidenceScore.textContent = `${confidence}%`;
-    
-        const meaning = `${state.selectedAnimal.name} profile detected with ${level} intensity at ${dominantHz} Hz.`;
+
+    const meaning = `${state.selectedAnimal.name} profile detected with ${level} intensity at ${dominantHz} Hz.`;
     interpretedMeaning.textContent = meaning;
 
     const translation = state.selectedAnimal.templates[level];
-    state.latestTranslation = translation;
-    humanSpeech.textContent = translation;
 
-    const inRange = estimated <= state.detectionDistance;
-    liveStatus.innerHTML = inRange
-      ? `<span class="good">Live detection in-range (${state.detectionDistance}m target)</span>`
-      : `Detected beyond configured range (${state.detectionDistance}m). Increase distance in settings.`;
+    if (inRange) {
+      state.latestTranslation = translation;
+      humanSpeech.textContent = translation;
+      liveStatus.innerHTML = `<span class="good">Animal-only filter passed and distance matched (${state.detectionDistance}m). Translation active.</span>`;
 
-    if (state.autoSpeak && state.lastSpokenText !== translation) {
-      state.lastSpokenText = translation;
-      speakText(translation);
+      if (state.autoSpeak && state.lastSpokenText !== translation) {
+        state.lastSpokenText = translation;
+        speakText(translation);
+      }
+    } else {
+      humanSpeech.textContent =
+        'Animal signal detected, but translation is locked until the source is around your configured distance for better accuracy.';
+      liveStatus.textContent =
+        `Animal signal at ~${estimated}m. Waiting for target zone around ${state.detectionDistance}m before translating.`;
     }
   } else {
     liveStatus.textContent = 'Listening... no strong animal-like signal yet.';
@@ -351,7 +511,7 @@ function restoreSettings() {
 
   if (savedAutoSpeak === 'true' || savedAutoSpeak === 'false') {
     state.autoSpeak = savedAutoSpeak === 'true';
-  }
+  }a
 
   distanceRange.value = String(state.detectionDistance);
   distanceValue.textContent = String(state.detectionDistance);
@@ -399,7 +559,7 @@ function bindEvents() {
     sensitivityValue.textContent = sensitivityRange.value;
   });
 
-    document.getElementById('settingsForm').addEventListener('submit', (event) => {
+  document.getElementById('settingsForm').addEventListener('submit', (event) => {
     event.preventDefault();
     saveSettings();
     settingsDialog.close();
@@ -422,7 +582,7 @@ function bindEvents() {
   speakNow.addEventListener('click', () => speakText(state.latestTranslation));
 }
 
-function init() {  
+function init() {
   restoreSettings();
   renderHomeGallery();
   renderAnimalSelector();
