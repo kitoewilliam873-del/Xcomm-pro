@@ -1,6 +1,6 @@
 :root {
   color-scheme: dark;
-  --bg: #08101f;
+--bg: #08101f;
   --card: #101b35;
   --soft: #172649;
   --line: #2e426f;
@@ -17,7 +17,7 @@
 body {
   margin: 0;
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
- background: radial-gradient(circle at top, #1a2b57, var(--bg));
+  background: radial-gradient(circle at top, #1a2b57, var(--bg));
   color: var(--txt);
   min-height: 100vh;
 }
@@ -148,7 +148,7 @@ h1 {
   background-size: cover;
   background-position: center;
   position: relative;
-}
+  }
 
 .hero-tile span {
   position: absolute;
@@ -177,13 +177,13 @@ h1 {
 .animal-card {
     padding: 0;
   border-radius: 12px;
-    overflow: hidden;
+  overflow: hidden;
   border: 1px solid var(--line);
   background: #1a2c54;
   color: var(--txt);
   text-align: left;
     cursor: pointer;
-} 
+}
 
 .animal-card img {
   width: 100%;
@@ -228,20 +228,20 @@ h1 {
 }
 
 .actions {
-  margin-top: 0.95rem;
+    margin-top: 0.95rem;
   display: flex;
   gap: 0.65rem;
   align-items: center;
-  flex-wrap: wrap;
+    flex-wrap: wrap;
 }
 
 .btn {
-background: linear-gradient(180deg, #72dbff, #4398d1);
+    background: linear-gradient(180deg, #72dbff, #4398d1);
   color: #06172f;
 }
 
 .btn-secondary {
-  border: 1px solid var(--line);
+    border: 1px solid var(--line);
   background: #283b67;
   color: var(--txt);
 }
